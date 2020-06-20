@@ -9,7 +9,7 @@ class CopasiSpecies:
         self.compartment=0
         self.noise="false"
         self.simulation_type="reactions"
-        self.initial_concentration=initial_concentration/100.0*N_a
+        self.initial_concentration=initial_concentration/1000.0*N_a
 
 class CopasiReaction:
     def __init__(self, id, name, substrates, products, k=0.1):
