@@ -28,94 +28,35 @@
         {% endfor %}
       </ListOfMetabolites>
       <ListOfReactions>
-         <Reaction key="Reaction_0" name="Y decay" reversible="false" fast="false" addNoise="false">
+        {% for reaction in reactions %}
+         <Reaction key="Reaction_{{ reaction.id }}" name="{{ reaction.name }}" reversible="false" fast="false" addNoise="false">
             <ListOfSubstrates>
-               <Substrate metabolite="Metabolite_2" stoichiometry="1" />
+                {% for s in reaction.substrates %}
+               <Substrate metabolite="Metabolite_{{ s[1].id }}" stoichiometry="{{ s[0] }}" />
+               {% endfor %}
             </ListOfSubstrates>
             <ListOfProducts>
-               <Product metabolite="Metabolite_3" stoichiometry="1" />
+                {% for p in reaction.products %}
+               <Product metabolite="Metabolite_{{ p[1].id }}" stoichiometry="{{ p[0] }}" />
+               {% endfor %}
             </ListOfProducts>
             <ListOfConstants>
-               <Constant key="Parameter_5366" name="k1" value="0.1" />
+               <Constant key="Parameter_{{ loop.index }}" name="k1" value="{{ reaction.k }}" />
             </ListOfConstants>
             <KineticLaw function="Function_13" unitType="Default" scalingCompartment="CN=Root,Model=New Model,Vector=Compartments[compartment]">
                <ListOfCallParameters>
                   <CallParameter functionParameter="FunctionParameter_80">
-                     <SourceParameter reference="Parameter_5366" />
+                     <SourceParameter reference="Parameter_{{ loop.index }}" />
                   </CallParameter>
                   <CallParameter functionParameter="FunctionParameter_81">
-                     <SourceParameter reference="Metabolite_2" />
+                     {% for s in reaction.substrates %}
+                     <SourceParameter reference="Metabolite_{{ s[1].id }}" />
+                     {% endfor %}
                   </CallParameter>
                </ListOfCallParameters>
             </KineticLaw>
          </Reaction>
-         <Reaction key="Reaction_1" name="R1" reversible="false" fast="false" addNoise="false">
-            <ListOfSubstrates>
-               <Substrate metabolite="Metabolite_0" stoichiometry="1" />
-            </ListOfSubstrates>
-            <ListOfProducts>
-               <Product metabolite="Metabolite_0" stoichiometry="1" />
-               <Product metabolite="Metabolite_2" stoichiometry="1" />
-            </ListOfProducts>
-            <ListOfConstants>
-               <Constant key="Parameter_5365" name="k1" value="0.1" />
-            </ListOfConstants>
-            <KineticLaw function="Function_13" unitType="Default" scalingCompartment="CN=Root,Model=New Model,Vector=Compartments[compartment]">
-               <ListOfCallParameters>
-                  <CallParameter functionParameter="FunctionParameter_80">
-                     <SourceParameter reference="Parameter_5365" />
-                  </CallParameter>
-                  <CallParameter functionParameter="FunctionParameter_81">
-                     <SourceParameter reference="Metabolite_0" />
-                  </CallParameter>
-               </ListOfCallParameters>
-            </KineticLaw>
-         </Reaction>
-         <Reaction key="Reaction_2" name="R2" reversible="false" fast="false" addNoise="false">
-            <ListOfSubstrates>
-               <Substrate metabolite="Metabolite_1" stoichiometry="1" />
-            </ListOfSubstrates>
-            <ListOfProducts>
-               <Product metabolite="Metabolite_1" stoichiometry="1" />
-               <Product metabolite="Metabolite_4" stoichiometry="1" />
-            </ListOfProducts>
-            <ListOfConstants>
-               <Constant key="Parameter_5364" name="k1" value="0.1" />
-            </ListOfConstants>
-            <KineticLaw function="Function_13" unitType="Default" scalingCompartment="CN=Root,Model=New Model,Vector=Compartments[compartment]">
-               <ListOfCallParameters>
-                  <CallParameter functionParameter="FunctionParameter_80">
-                     <SourceParameter reference="Parameter_5364" />
-                  </CallParameter>
-                  <CallParameter functionParameter="FunctionParameter_81">
-                     <SourceParameter reference="Metabolite_1" />
-                  </CallParameter>
-               </ListOfCallParameters>
-            </KineticLaw>
-         </Reaction>
-         <Reaction key="Reaction_3" name="R3" reversible="false" fast="false" addNoise="false">
-            <ListOfSubstrates>
-               <Substrate metabolite="Metabolite_2" stoichiometry="1" />
-               <Substrate metabolite="Metabolite_4" stoichiometry="1" />
-            </ListOfSubstrates>
-            <ListOfProducts>
-               <Product metabolite="Metabolite_3" stoichiometry="1" />
-            </ListOfProducts>
-            <ListOfConstants>
-               <Constant key="Parameter_5386" name="k1" value="0.1" />
-            </ListOfConstants>
-            <KineticLaw function="Function_13" unitType="Default" scalingCompartment="CN=Root,Model=New Model,Vector=Compartments[compartment]">
-               <ListOfCallParameters>
-                  <CallParameter functionParameter="FunctionParameter_80">
-                     <SourceParameter reference="Parameter_5386" />
-                  </CallParameter>
-                  <CallParameter functionParameter="FunctionParameter_81">
-                     <SourceParameter reference="Metabolite_2" />
-                     <SourceParameter reference="Metabolite_4" />
-                  </CallParameter>
-               </ListOfCallParameters>
-            </KineticLaw>
-         </Reaction>
+         {% endfor %}
       </ListOfReactions>
       <ListOfModelParameterSets activeSet="ModelParameterSet_1">
          <ModelParameterSet key="ModelParameterSet_1" name="Initial State">
