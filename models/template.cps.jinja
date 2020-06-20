@@ -151,14 +151,16 @@
       </ListOfModelParameterSets>
       <StateTemplate>
          <StateTemplateVariable objectReference="Model_1" />
-         <StateTemplateVariable objectReference="Metabolite_2" />
-         <StateTemplateVariable objectReference="Metabolite_4" />
-         <StateTemplateVariable objectReference="Metabolite_3" />
-         <StateTemplateVariable objectReference="Metabolite_0" />
-         <StateTemplateVariable objectReference="Metabolite_1" />
+         {% for species in species_list %}
+         <StateTemplateVariable objectReference="Metabolite_{{ species.id }}" />
+         {% endfor %}
          <StateTemplateVariable objectReference="Compartment_0" />
       </StateTemplate>
-      <InitialState type="initialState">0 0 0 0 8.4309971998000001e+21 4.2154985999e+21 1</InitialState>
+      <InitialState type="initialState">0
+      {% for species in species_list %}
+      {{ species.initial_concentration }}
+      {% endfor %}
+      1</InitialState>
    </Model>
    <ListOfTasks>
       <Task key="Task_16" name="Time-Course" type="timeCourse" scheduled="false" updateModel="false">
