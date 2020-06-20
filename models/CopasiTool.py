@@ -27,11 +27,17 @@ def create_copasi_file_from_template(template_path, species, reactions):
 
 if __name__ == "__main__":
     species = []
-    species.append(CopasiSpecies(3, "null"))
-    species.append(CopasiSpecies(0, "X1", 17))
-    species.append(CopasiSpecies(1, "X2", 7))
-    species.append(CopasiSpecies(2, "Y"))
-    species.append(CopasiSpecies(4, "Z"))
+    null = CopasiSpecies(3, "null"); species.append(null)
+    X1 = CopasiSpecies(0, "X1", 17); species.append(X1)
+    X2 = CopasiSpecies(1, "X2", 7); species.append(X2)
+    Y = CopasiSpecies(2, "Y"); species.append(Y)
+    Z = CopasiSpecies(4, "Z"); species.append(Z)
+    
+    reactions = []
+    Ydecay = CopasiReaction(0, "Y decay", substrates=[(1, Y)], products=[(1,null)]); reactions.append(Ydecay)
+    R1 = CopasiReaction(1, "R1", substrates=[(1,X1)], products=[(1,X1), (1,Y)]); reactions.append(R1)
+    R2 = CopasiReaction(2, "R2", substrates=[(1,X2)], products=[(1,X2), (1,Z)]); reactions.append(R2)
+    R3 = CopasiReaction(3, "R3", substrates=[(1,Y), (1,Z)], products=[(1,null)]); reactions.append(R3)
     
     with open("result.cps", "wb") as f:
-        f.write(create_copasi_file_from_template("template.cps.jinja", species, []).encode("utf-8"))
+        f.write(create_copasi_file_from_template("template.cps.jinja", species, reactions).encode("utf-8"))
