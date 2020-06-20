@@ -63,31 +63,6 @@
             <ModelParameterGroup cn="String=Initial Time" type="Group">
                <ModelParameter cn="CN=Root,Model=New Model" value="0" type="Model" simulationType="time" />
             </ModelParameterGroup>
-            <ModelParameterGroup cn="String=Initial Compartment Sizes" type="Group">
-               <ModelParameter cn="CN=Root,Model=New Model,Vector=Compartments[compartment]" value="1" type="Compartment" simulationType="fixed" />
-            </ModelParameterGroup>
-            <ModelParameterGroup cn="String=Initial Species Values" type="Group">
-               <ModelParameter cn="CN=Root,Model=New Model,Vector=Compartments[compartment],Vector=Metabolites[X1]" value="8.4309971998000001e+21" type="Species" simulationType="reactions" />
-               <ModelParameter cn="CN=Root,Model=New Model,Vector=Compartments[compartment],Vector=Metabolites[X2]" value="4.2154985999e+21" type="Species" simulationType="reactions" />
-               <ModelParameter cn="CN=Root,Model=New Model,Vector=Compartments[compartment],Vector=Metabolites[Y]" value="0" type="Species" simulationType="reactions" />
-               <ModelParameter cn="CN=Root,Model=New Model,Vector=Compartments[compartment],Vector=Metabolites[null]" value="0" type="Species" simulationType="reactions" />
-               <ModelParameter cn="CN=Root,Model=New Model,Vector=Compartments[compartment],Vector=Metabolites[Z]" value="0" type="Species" simulationType="reactions" />
-            </ModelParameterGroup>
-            <ModelParameterGroup cn="String=Initial Global Quantities" type="Group" />
-            <ModelParameterGroup cn="String=Kinetic Parameters" type="Group">
-               <ModelParameterGroup cn="CN=Root,Model=New Model,Vector=Reactions[Y decay]" type="Reaction">
-                  <ModelParameter cn="CN=Root,Model=New Model,Vector=Reactions[Y decay],ParameterGroup=Parameters,Parameter=k1" value="0.10000000000000001" type="ReactionParameter" simulationType="fixed" />
-               </ModelParameterGroup>
-               <ModelParameterGroup cn="CN=Root,Model=New Model,Vector=Reactions[R1]" type="Reaction">
-                  <ModelParameter cn="CN=Root,Model=New Model,Vector=Reactions[R1],ParameterGroup=Parameters,Parameter=k1" value="0.10000000000000001" type="ReactionParameter" simulationType="fixed" />
-               </ModelParameterGroup>
-               <ModelParameterGroup cn="CN=Root,Model=New Model,Vector=Reactions[R2]" type="Reaction">
-                  <ModelParameter cn="CN=Root,Model=New Model,Vector=Reactions[R2],ParameterGroup=Parameters,Parameter=k1" value="0.10000000000000001" type="ReactionParameter" simulationType="fixed" />
-               </ModelParameterGroup>
-               <ModelParameterGroup cn="CN=Root,Model=New Model,Vector=Reactions[R3]" type="Reaction">
-                  <ModelParameter cn="CN=Root,Model=New Model,Vector=Reactions[R3],ParameterGroup=Parameters,Parameter=k1" value="0.10000000000000001" type="ReactionParameter" simulationType="fixed" />
-               </ModelParameterGroup>
-            </ModelParameterGroup>
          </ModelParameterSet>
       </ListOfModelParameterSets>
       <StateTemplate>
