@@ -27,6 +27,26 @@ class CopasiReaction:
         self.products=products
         self.k=k
 
+# A functional reaction is a set of reactions that are tuned to represent a single higher order function as addition or division.
+__num_functional_reactions = 0
+
+def create_ADD_reactions(X1, X2, Y):
+    """
+    Returns reactions that represent the function: Y = X1 + X2
+    Their naming scheme includes the type of function, an id, and descriptions of each reaction
+    using the literals "X1", "X2", and "Y" instead of the species these variables stand for.
+    This way it is easier to recognize their purpose in Copasi. For instance, if it just said
+    "x25 -> x25 + intermediate2342" nobody would know what the purpose of that x25 is.
+    """
+    global __num_functional_reactions
+    name_prefix = "Add{}_".format(__num_functional_reactions)
+    __num_functional_reactions += 1
+    
+    R1 = CopasiReaction(name_prefix+"X1toY", substrates=[(1,X1)], products=[(1,X1),(1,Y)])
+    R2 = CopasiReaction(name_prefix+"X2toY", substrates=[(1,X2)], products=[(1,X2),(1,Y)])
+    R3 = CopasiReaction(name_prefix+"Ydecay", substrates=[(1,Y)], products=[(1,null)])
+    return [R1, R2, R3]
+
 def create_copasi_file_from_template(template_path, species, reactions):
     env = Environment(loader=FileSystemLoader(searchpath="./"), autoescape=True)
     template = env.get_template(template_path)
