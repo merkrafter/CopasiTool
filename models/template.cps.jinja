@@ -50,7 +50,9 @@
                   </CallParameter>
                   <CallParameter functionParameter="FunctionParameter_81">
                      {% for s in reaction.substrates %}
-                     <SourceParameter reference="Metabolite_{{ s[1].id }}" />
+                       {% for _ in range(s[0]) %}
+                         <SourceParameter reference="Metabolite_{{ s[1].id }}" />
+                       {% endfor %}
                      {% endfor %}
                   </CallParameter>
                </ListOfCallParameters>

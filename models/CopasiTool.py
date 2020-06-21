@@ -119,6 +119,21 @@ class CopasiModel:
         R2 = CopasiReaction(name_prefix+"X2toX2andY", substrates=[(1,X2)], products=[(1,X2),(1,Y)])
         self.reactions += [R1, R2]
 
+    def create_SQRT_reactions(self, X, Y):
+        """
+        Creates reactions that represent the function: Y = sqrt(X)
+        Their naming scheme includes the type of function, an id, and descriptions of each reaction
+        using the literals "X", and "Y" instead of the species these variables stand for.
+        This way it is easier to recognize their purpose in Copasi. For instance, if it just said
+        "x25 -> x25 + intermediate2342" nobody would know what the purpose of that x25 is.
+        """
+        name_prefix = "Sqrt{}_".format(self.num_functional_reactions)
+        self.num_functional_reactions += 1
+        
+        R1 = CopasiReaction(name_prefix+"XtoXandY", substrates=[(1,X)], products=[(1,X),(1,Y)], k=0.2)
+        R2 = CopasiReaction(name_prefix+"2Ydecay", substrates=[(2,Y)], products=[(1,self.null)])
+        self.reactions += [R1, R2]
+
 def create_copasi_file_from_template(template_path, species, reactions):
     env = Environment(loader=FileSystemLoader(searchpath="./"), autoescape=True)
     template = env.get_template(template_path)
@@ -132,7 +147,7 @@ if __name__ == "__main__":
     X2 = model.add_species(name="X2", initial_concentration=1)
     Y  = model.add_species(name="Y")
     
-    model.create_DIV_reactions(X1, X2, Y)
+    model.create_ADD_reactions(X1, X2, Y)
     
     with open("result.cps", "wb") as f:
         f.write(create_copasi_file_from_template("template.cps.jinja", model.species_list, model.reactions).encode("utf-8"))
