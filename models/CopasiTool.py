@@ -13,9 +13,6 @@ class CopasiSpecies:
         self.simulation_type="reactions"
         self.initial_concentration=initial_concentration/1000.0*N_a
 
-# This null species is expected to exist by later functions.
-# It serves as a "bin", that is, other species that should decay in reality are converted to null in COPASI
-null = CopasiSpecies("null")
 
 class CopasiReaction:
     __counter = 0
@@ -27,25 +24,44 @@ class CopasiReaction:
         self.products=products
         self.k=k
 
-# A functional reaction is a set of reactions that are tuned to represent a single higher order function as addition or division.
-__num_functional_reactions = 0
+class CopasiModel:
 
-def create_ADD_reactions(X1, X2, Y):
-    """
-    Returns reactions that represent the function: Y = X1 + X2
-    Their naming scheme includes the type of function, an id, and descriptions of each reaction
-    using the literals "X1", "X2", and "Y" instead of the species these variables stand for.
-    This way it is easier to recognize their purpose in Copasi. For instance, if it just said
-    "x25 -> x25 + intermediate2342" nobody would know what the purpose of that x25 is.
-    """
-    global __num_functional_reactions
-    name_prefix = "Add{}_".format(__num_functional_reactions)
-    __num_functional_reactions += 1
+    def __init__(self, name):
+        self.name = name
+        self.species_list = []
+        self.reactions = []
+        # A functional reaction is a set of reactions that are tuned to represent a single higher order function as addition or division.
+        self.num_functional_reactions = 0
+        self.num_intermediate_species = 0
+        # This null species is expected to exist by later functions.
+        # It serves as a "bin", that is, other species that should decay in reality are converted to null in COPASI
+        self.null = CopasiSpecies("null")
+        self.add_species(self.null)
     
-    R1 = CopasiReaction(name_prefix+"X1toY", substrates=[(1,X1)], products=[(1,X1),(1,Y)])
-    R2 = CopasiReaction(name_prefix+"X2toY", substrates=[(1,X2)], products=[(1,X2),(1,Y)])
-    R3 = CopasiReaction(name_prefix+"Ydecay", substrates=[(1,Y)], products=[(1,null)])
-    return [R1, R2, R3]
+    def add_species(self, species):
+        self.species_list.append(species)
+    
+    def add_reaction(self, reaction):
+        self.reactions.append(reaction)
+
+    def create_ADD_reactions(self, X1, X2, Y):
+        """
+        Creates reactions that represent the function: Y = X1 + X2
+        Their naming scheme includes the type of function, an id, and descriptions of each reaction
+        using the literals "X1", "X2", and "Y" instead of the species these variables stand for.
+        This way it is easier to recognize their purpose in Copasi. For instance, if it just said
+        "x25 -> x25 + intermediate2342" nobody would know what the purpose of that x25 is.
+        """
+        # TODO allow Y=None; return a tuple of created intermediate species as well
+        name_prefix = "Add{}_".format(self.num_functional_reactions)
+        self.num_functional_reactions += 1
+        
+        R1 = CopasiReaction(name_prefix+"X1toY", substrates=[(1,X1)], products=[(1,X1),(1,Y)])
+        R2 = CopasiReaction(name_prefix+"X2toY", substrates=[(1,X2)], products=[(1,X2),(1,Y)])
+        R3 = CopasiReaction(name_prefix+"Ydecay", substrates=[(1,Y)], products=[(1,self.null)])
+        self.reactions += [R1, R2, R3]
+        #self.species.append(Y)
+
 
 def create_copasi_file_from_template(template_path, species, reactions):
     env = Environment(loader=FileSystemLoader(searchpath="./"), autoescape=True)
@@ -54,18 +70,14 @@ def create_copasi_file_from_template(template_path, species, reactions):
 
 
 if __name__ == "__main__":
-    species = []
-    species.append(null)
-    X1 = CopasiSpecies("X1", 17); species.append(X1)
-    X2 = CopasiSpecies("X2", 7); species.append(X2)
-    Y = CopasiSpecies("Y"); species.append(Y)
-    Z = CopasiSpecies("Z"); species.append(Z)
+    model = CopasiModel("New Model")
     
-    reactions = []
-    Ydecay = CopasiReaction("Y decay", substrates=[(1, Y)], products=[(1,null)]); reactions.append(Ydecay)
-    R1 = CopasiReaction("R1", substrates=[(1,X1)], products=[(1,X1), (1,Y)]); reactions.append(R1)
-    R2 = CopasiReaction("R2", substrates=[(1,X2)], products=[(1,X2), (1,Z)]); reactions.append(R2)
-    R3 = CopasiReaction("R3", substrates=[(1,Y), (1,Z)], products=[(1,null)]); reactions.append(R3)
+    X1 = CopasiSpecies("X1", 17); model.add_species(X1)
+    X2 = CopasiSpecies("X2", 7); model.add_species(X2)
+    Y = CopasiSpecies("Y"); model.add_species(Y)
+    Z = CopasiSpecies("Z"); model.add_species(Z)
+    
+    model.create_ADD_reactions(X1, X2, Y)
     
     with open("result.cps", "wb") as f:
-        f.write(create_copasi_file_from_template("template.cps.jinja", species, reactions).encode("utf-8"))
+        f.write(create_copasi_file_from_template("template.cps.jinja", model.species_list, model.reactions).encode("utf-8"))
