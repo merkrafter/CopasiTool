@@ -35,18 +35,26 @@ class CopasiModel:
         # This null species is expected to exist by later functions.
         # It serves as a "bin", that is, other species that should decay in reality are converted to null in COPASI
         self.null = CopasiSpecies("null")
-        self.add_species(self.null)
+        self.ensure_species(self.null)
     
-    def add_species(self, species=None, **kwargs):
+    def ensure_species(self, species=None, **kwargs):
         """
-        Adds a species to this model.
+        Ensures a certain species is known to this model.
         This can either be done by passing a species directly or by passing arguments to create one.
-        Either way, the species that was added to this model will be returned in the end.
+        If a species with the same name already exists in this model, nothing will be added.
+        The species that is part of this model after this method invocation is returned in the end.
         """
         if species is None:
             species = CopasiSpecies(**kwargs)
-        self.species_list.append(species)
-        return species
+            
+        try:
+            idx = list(map(lambda s: s.name, self.species_list)).index(species.name)
+            return self.species_list[idx]
+        except ValueError:
+            self.species_list.append(species)
+            return species
+        
+        
     
     def add_reaction(self, reaction):
         self.reactions.append(reaction)
@@ -81,7 +89,7 @@ class CopasiModel:
         self.num_functional_reactions += 1
         
         Z = CopasiSpecies(name_prefix+"Z")
-        self.add_species(Z)
+        self.ensure_species(Z)
         
         R1 = CopasiReaction(name_prefix+"X1toY", substrates=[(1,X1)], products=[(1,X1), (1,Y)])
         R2 = CopasiReaction(name_prefix+"X2toZ", substrates=[(1,X2)], products=[(1,X2), (1,Z)])
