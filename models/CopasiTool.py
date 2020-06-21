@@ -13,6 +13,10 @@ class CopasiSpecies:
         self.simulation_type="reactions"
         self.initial_concentration=initial_concentration/1000.0*N_a
 
+# This null species is expected to exist by later functions.
+# It serves as a "bin", that is, other species that should decay in reality are converted to null in COPASI
+null = CopasiSpecies("null")
+
 class CopasiReaction:
     __counter = 0
     def __init__(self, name, substrates, products, k=0.1):
@@ -31,10 +35,10 @@ def create_copasi_file_from_template(template_path, species, reactions):
 
 if __name__ == "__main__":
     species = []
+    species.append(null)
     X1 = CopasiSpecies("X1", 17); species.append(X1)
     X2 = CopasiSpecies("X2", 7); species.append(X2)
     Y = CopasiSpecies("Y"); species.append(Y)
-    null = CopasiSpecies("null"); species.append(null)
     Z = CopasiSpecies("Z"); species.append(Z)
     
     reactions = []
