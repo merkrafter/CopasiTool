@@ -142,6 +142,31 @@ class CopasiModel:
         R2 = CopasiReaction(name_prefix+"2Ydecay", substrates=[(2,Y)], products=[(1,self.null)])
         self.reactions += [R1, R2]
 
+    def create_reactions_from(self, line):
+        """
+        Reads a string and creates functional reactions from it.
+        """
+        try:
+            Yname, _, func, X1name, X2name = line.split(" ")
+            Y = self.ensure_species(name=Yname)
+            X1 = self.ensure_species(name=X1name)
+            X2 = self.ensure_species(name=X2name)
+            
+            func = func.lower()
+            if func=="add":
+                self.create_ADD_reactions(X1, X2, Y)
+            elif func=="sub":
+                self.create_SUB_reactions(X1, X2, Y)
+            elif func=="mul":
+                self.create_MUL_reactions(X1, X2, Y)
+            elif func=="div":
+                self.create_DIV_reactions(X1, X2, Y)
+        except ValueError: # too many values to unpack
+            # this has to be a sqrt
+            Yname, _, func, Xname = line.split(" ")
+            if func.lower()=="sqrt":
+                self.create_SQRT_reactions(X, Y)
+
     def dump(self, destination, template_path="template.cps.jinja"):
         """
         Creates an xml file from this model that can be read and executed with Copasi
