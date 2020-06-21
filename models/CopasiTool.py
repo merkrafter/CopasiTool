@@ -1,4 +1,6 @@
 from jinja2 import Template, Environment, FileSystemLoader
+from yaml import safe_load
+
 
 N_a = 6.0221408570000002e+23
 
@@ -177,13 +179,24 @@ class CopasiModel:
             f.write(template.render(model=self, species_list=self.species_list, reactions=self.reactions).encode("utf-8"))
 
 
+def yaml2model(yaml_str):
+    """
+    Reads the given YAML string and returns a CopasiModel from it.
+    """
+    data = safe_load(yaml_str)
+    model = CopasiModel(data["name"])
+    
+    for species_description in data["input"]:
+        species = model.ensure_species(**species_description)
+    
+    for function_description in data["functions"]:
+        model.create_reactions_from(function_description)
+        
+    return model
+
 if __name__ == "__main__":
-    model = CopasiModel("New Model")
-    
-    X1 = model.add_species(name="X1", initial_concentration=10)
-    X2 = model.add_species(name="X2", initial_concentration=1)
-    Y  = model.add_species(name="Y")
-    
-    model.create_ADD_reactions(X1, X2, Y)
+    with open("avg.yaml") as f:
+        data = f.read()
+    model = yaml2model(data)
     
     model.dump("result.cps")
