@@ -17,7 +17,7 @@
          </ListOfParameterDescriptions>
       </Function>
    </ListOfFunctions>
-   <Model key="Model_1" name="New Model" simulationType="time" timeUnit="s" volumeUnit="ml" areaUnit="m²" lengthUnit="m" quantityUnit="mmol" type="deterministic" avogadroConstant="6.0221408570000002e+23">
+   <Model key="Model_1" name="{{ model.name }}" simulationType="time" timeUnit="s" volumeUnit="ml" areaUnit="m²" lengthUnit="m" quantityUnit="mmol" type="deterministic" avogadroConstant="6.0221408570000002e+23">
       <ListOfCompartments>
          <Compartment key="Compartment_0" name="compartment" simulationType="fixed" dimensionality="3" addNoise="false">
          </Compartment>
@@ -43,7 +43,7 @@
             <ListOfConstants>
                <Constant key="Parameter_{{ loop.index }}" name="k1" value="{{ reaction.k }}" />
             </ListOfConstants>
-            <KineticLaw function="Function_13" unitType="Default" scalingCompartment="CN=Root,Model=New Model,Vector=Compartments[compartment]">
+            <KineticLaw function="Function_13" unitType="Default" scalingCompartment="CN=Root,Model={{ model.name }},Vector=Compartments[compartment]">
                <ListOfCallParameters>
                   <CallParameter functionParameter="FunctionParameter_80">
                      <SourceParameter reference="Parameter_{{ loop.index }}" />
@@ -63,7 +63,7 @@
       <ListOfModelParameterSets activeSet="ModelParameterSet_1">
          <ModelParameterSet key="ModelParameterSet_1" name="Initial State">
             <ModelParameterGroup cn="String=Initial Time" type="Group">
-               <ModelParameter cn="CN=Root,Model=New Model" value="0" type="Model" simulationType="time" />
+               <ModelParameter cn="CN=Root,Model={{ model.name }}" value="0" type="Model" simulationType="time" />
             </ModelParameterGroup>
          </ModelParameterSet>
       </ListOfModelParameterSets>
@@ -116,8 +116,8 @@
                <Parameter name="Color" type="string" value="auto" />
                <Parameter name="Recording Activity" type="string" value="during" />
                <ListOfChannels>
-                  <ChannelSpec cn="CN=Root,Model=New Model,Reference=Time" />
-                  <ChannelSpec cn="CN=Root,Model=New Model,Vector=Compartments[compartment],Vector=Metabolites[X1],Reference=Concentration" />
+                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Reference=Time" />
+                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Vector=Compartments[compartment],Vector=Metabolites[X1],Reference=Concentration" />
                </ListOfChannels>
             </PlotItem>
             <PlotItem name="[X2]|Time" type="Curve2D">
@@ -128,8 +128,8 @@
                <Parameter name="Color" type="string" value="auto" />
                <Parameter name="Recording Activity" type="string" value="during" />
                <ListOfChannels>
-                  <ChannelSpec cn="CN=Root,Model=New Model,Reference=Time" />
-                  <ChannelSpec cn="CN=Root,Model=New Model,Vector=Compartments[compartment],Vector=Metabolites[X2],Reference=Concentration" />
+                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Reference=Time" />
+                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Vector=Compartments[compartment],Vector=Metabolites[X2],Reference=Concentration" />
                </ListOfChannels>
             </PlotItem>
             <PlotItem name="[Y]|Time" type="Curve2D">
@@ -140,8 +140,8 @@
                <Parameter name="Color" type="string" value="auto" />
                <Parameter name="Recording Activity" type="string" value="during" />
                <ListOfChannels>
-                  <ChannelSpec cn="CN=Root,Model=New Model,Reference=Time" />
-                  <ChannelSpec cn="CN=Root,Model=New Model,Vector=Compartments[compartment],Vector=Metabolites[Y],Reference=Concentration" />
+                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Reference=Time" />
+                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Vector=Compartments[compartment],Vector=Metabolites[Y],Reference=Concentration" />
                </ListOfChannels>
             </PlotItem>
          </ListOfPlotItems>

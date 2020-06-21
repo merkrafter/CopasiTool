@@ -141,7 +141,7 @@ class CopasiModel:
         with open(destination, "wb") as f:  # binary mode for utf-8 encoding
             env = Environment(loader=FileSystemLoader(searchpath="./"), autoescape=True)
             template = env.get_template(template_path)
-            f.write(template.render(species_list=self.species_list, reactions=self.reactions).encode("utf-8"))
+            f.write(template.render(model=self, species_list=self.species_list, reactions=self.reactions).encode("utf-8"))
 
 
 if __name__ == "__main__":
