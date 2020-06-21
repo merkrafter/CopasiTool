@@ -3,8 +3,10 @@ from jinja2 import Template, Environment, FileSystemLoader
 N_a = 6.0221408570000002e+23
 
 class CopasiSpecies:
-    def __init__(self, id, name, initial_concentration=0):
-        self.id=id
+    __counter = 0
+    def __init__(self, name, initial_concentration=0):
+        self.id=CopasiSpecies.__counter
+        CopasiSpecies.__counter += 1
         self.name=name
         self.compartment=0
         self.noise="false"
@@ -27,11 +29,11 @@ def create_copasi_file_from_template(template_path, species, reactions):
 
 if __name__ == "__main__":
     species = []
-    null = CopasiSpecies(3, "null"); species.append(null)
-    X1 = CopasiSpecies(0, "X1", 17); species.append(X1)
-    X2 = CopasiSpecies(1, "X2", 7); species.append(X2)
-    Y = CopasiSpecies(2, "Y"); species.append(Y)
-    Z = CopasiSpecies(4, "Z"); species.append(Z)
+    X1 = CopasiSpecies("X1", 17); species.append(X1)
+    X2 = CopasiSpecies("X2", 7); species.append(X2)
+    Y = CopasiSpecies("Y"); species.append(Y)
+    null = CopasiSpecies("null"); species.append(null)
+    Z = CopasiSpecies("Z"); species.append(Z)
     
     reactions = []
     Ydecay = CopasiReaction(0, "Y decay", substrates=[(1, Y)], products=[(1,null)]); reactions.append(Ydecay)
