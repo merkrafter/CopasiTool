@@ -134,10 +134,14 @@ class CopasiModel:
         R2 = CopasiReaction(name_prefix+"2Ydecay", substrates=[(2,Y)], products=[(1,self.null)])
         self.reactions += [R1, R2]
 
-def create_copasi_file_from_template(template_path, species, reactions):
-    env = Environment(loader=FileSystemLoader(searchpath="./"), autoescape=True)
-    template = env.get_template(template_path)
-    return template.render(species_list=species, reactions=reactions)
+    def dump(self, destination, template_path="template.cps.jinja"):
+        """
+        Creates an xml file from this model that can be read and executed with Copasi
+        """
+        with open(destination, "wb") as f:  # binary mode for utf-8 encoding
+            env = Environment(loader=FileSystemLoader(searchpath="./"), autoescape=True)
+            template = env.get_template(template_path)
+            f.write(template.render(species_list=self.species_list, reactions=self.reactions).encode("utf-8"))
 
 
 if __name__ == "__main__":
@@ -149,5 +153,4 @@ if __name__ == "__main__":
     
     model.create_ADD_reactions(X1, X2, Y)
     
-    with open("result.cps", "wb") as f:
-        f.write(create_copasi_file_from_template("template.cps.jinja", model.species_list, model.reactions).encode("utf-8"))
+    model.dump("result.cps")
