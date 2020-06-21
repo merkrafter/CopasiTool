@@ -38,8 +38,16 @@ class CopasiModel:
         self.null = CopasiSpecies("null")
         self.add_species(self.null)
     
-    def add_species(self, species):
+    def add_species(self, species=None, **kwargs):
+        """
+        Adds a species to this model.
+        This can either be done by passing a species directly or by passing arguments to create one.
+        Either way, the species that was added to this model will be returned in the end.
+        """
+        if species is None:
+            species = CopasiSpecies(**kwargs)
         self.species_list.append(species)
+        return species
     
     def add_reaction(self, reaction):
         self.reactions.append(reaction)
@@ -72,10 +80,9 @@ def create_copasi_file_from_template(template_path, species, reactions):
 if __name__ == "__main__":
     model = CopasiModel("New Model")
     
-    X1 = CopasiSpecies("X1", 17); model.add_species(X1)
-    X2 = CopasiSpecies("X2", 7); model.add_species(X2)
-    Y = CopasiSpecies("Y"); model.add_species(Y)
-    Z = CopasiSpecies("Z"); model.add_species(Z)
+    X1 = model.add_species(name="X1", initial_concentration=10)
+    X2 = model.add_species(name="X2", initial_concentration=1)
+    Y  = model.add_species(name="Y")
     
     model.create_ADD_reactions(X1, X2, Y)
     
