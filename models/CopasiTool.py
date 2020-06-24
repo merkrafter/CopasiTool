@@ -76,7 +76,7 @@ class CopasiModel:
         This way it is easier to recognize their purpose in Copasi. For instance, if it just said
         "x25 -> x25 + intermediate2342" nobody would know what the purpose of that x25 is.
         """
-        name_prefix = f"Add{self.num_functional_reactions}_"
+        name_prefix = f"{self.num_functional_reactions}_Add_"
         self.num_functional_reactions += 1
         
         R1 = CopasiReaction(name_prefix+"X1toY", substrates=[(1,X1)], products=[(1,X1),(1,Y)])
@@ -95,7 +95,7 @@ class CopasiModel:
         This way it is easier to recognize their purpose in Copasi. For instance, if it just said
         "x25 -> x25 + intermediate2342" nobody would know what the purpose of that x25 is.
         """
-        name_prefix = f"Sub{self.num_functional_reactions}_"
+        name_prefix = f"{self.num_functional_reactions}_Sub_"
         self.num_functional_reactions += 1
         
         Z = CopasiSpecies(name_prefix+"Z")
@@ -118,7 +118,7 @@ class CopasiModel:
         This way it is easier to recognize their purpose in Copasi. For instance, if it just said
         "x25 -> x25 + intermediate2342" nobody would know what the purpose of that x25 is.
         """
-        name_prefix = f"Mul{self.num_functional_reactions}_"
+        name_prefix = f"{self.num_functional_reactions}_Mul_"
         self.num_functional_reactions += 1
         
         R1 = CopasiReaction(name_prefix+"X1andX2toY", substrates=[(1,X1),(1,X2)], products=[(1,X1),(1,X2),(1,Y)])
@@ -136,7 +136,7 @@ class CopasiModel:
         This way it is easier to recognize their purpose in Copasi. For instance, if it just said
         "x25 -> x25 + intermediate2342" nobody would know what the purpose of that x25 is.
         """
-        name_prefix = f"Div{self.num_functional_reactions}_"
+        name_prefix = f"{self.num_functional_reactions}_Div_"
         self.num_functional_reactions += 1
         
         R1 = CopasiReaction(name_prefix+"X1andYtoX1", substrates=[(1,X1),(1,Y)], products=[(1,X1)])
@@ -154,7 +154,7 @@ class CopasiModel:
         This way it is easier to recognize their purpose in Copasi. For instance, if it just said
         "x25 -> x25 + intermediate2342" nobody would know what the purpose of that x25 is.
         """
-        name_prefix = f"Sqrt{self.num_functional_reactions}_"
+        name_prefix = f"{self.num_functional_reactions}_Sqrt_"
         self.num_functional_reactions += 1
         
         R1 = CopasiReaction(name_prefix+"XtoXandY", substrates=[(1,X)], products=[(1,X),(1,Y)], k=0.2)
