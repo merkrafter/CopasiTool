@@ -195,8 +195,15 @@ def yaml2model(yaml_str):
     return model
 
 if __name__ == "__main__":
-    with open("avg.yaml") as f:
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input", help="YAML configuration file")
+    parser.add_argument("--output", "-o", help="Copasi-readable XML file", default="result.cps")
+    
+    args = parser.parse_args()
+    
+    with open(args.input) as f:
         data = f.read()
     model = yaml2model(data)
     
-    model.dump("result.cps")
+    model.dump(args.output)
