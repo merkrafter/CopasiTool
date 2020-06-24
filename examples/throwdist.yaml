@@ -1,0 +1,53 @@
+# Description of a COPASI-readable biochemical network
+# to analogously compute the approximate distance an object
+# reaches when thrown, given the launch angle alpha,
+# the initial height h0, and the initial speed v.
+name: Throw distance approximation
+input:
+  - name: alpha
+    initial_concentration: 0.785 # pi/4
+  - name: h0
+    initial_concentration: 0 # from ground
+  - name: v
+    initial_concentration: 5
+    
+  # constants
+  - name: g
+    initial_concentration: 9.81
+  - name: ONE
+    initial_concentration: 1
+  - name: TWO
+    initial_concentration: 2
+  - name: SIX
+    initial_concentration: 6
+
+functions:
+  # Taylor approximation of cosine
+  - a2 = MUL alpha alpha
+  - x1 = DIV a2 TWO
+  - Tcos = SUB ONE x1
+  
+  # Taylor approximation of sine
+  - a3 = MUL a2 alpha
+  - x2 = DIV a3 SIX
+  - Tsin = SUB alpha x2
+  
+  # zero of the throw height function (point in time; t_n)
+  - b = MUL v Tsin
+  - x3 = MUL b b
+  - x4 = MUL g h0
+  - x5 = MUL TWO x4
+  - D = ADD x3 x5
+  - x6 = SQRT D
+  - x7 = ADD b x6
+  - tn = DIV x7 g
+
+  # plug into throw distance function
+  - vTcos = MUL v Tcos
+  - wn = MUL vTcos tn
+  
+plots:
+  - name: Taylor approximation
+    species: [alpha, Tcos, Tsin]
+  - name: Overall throw distance function
+    species: [alpha, h0, v, g, wn]
