@@ -103,8 +103,8 @@ class CopasiModel:
         
         R1 = CopasiReaction(name_prefix+"X1toY", substrates=[(1,X1)], products=[(1,X1), (1,Y)])
         R2 = CopasiReaction(name_prefix+"X2toZ", substrates=[(1,X2)], products=[(1,X2), (1,Z)])
-        R3 = CopasiReaction("YandZdecay", substrates=[(1,Y), (1,Z)], products=[(1,self.null)])
-        R4 = CopasiReaction("Ydecay", substrates=[(1, Y)], products=[(1,self.null)])
+        R3 = CopasiReaction(name_prefix+"YandZdecay", substrates=[(1,Y), (1,Z)], products=[(1,self.null)])
+        R4 = CopasiReaction(name_prefix+"Ydecay", substrates=[(1, Y)], products=[(1,self.null)])
         self.reactions += [R1, R2, R3, R4]
         
         if self.logger is not None:
