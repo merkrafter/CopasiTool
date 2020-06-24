@@ -1,0 +1,19 @@
+# Description of a COPASI-readable biochemical network
+# to analogously compute the average of two non-negative,
+# real numbers.
+name: Average
+input:
+  - name: a
+    initial_concentration: 6
+  - name: b
+    initial_concentration: 0 # from ground
+  - name: TWO
+    initial_concentration: 2
+
+functions:
+  - sum = ADD a b
+  - avg = DIV sum TWO  # should approach 3
+
+plots:
+  - name: Main plot
+    species: [a, b, sum, avg]
