@@ -1,3 +1,4 @@
+import collections
 import logging
 
 from jinja2 import Template, Environment, FileSystemLoader
@@ -40,6 +41,7 @@ class CopasiModel:
         # It serves as a "bin", that is, other species that should decay in reality are converted to null in COPASI
         self.logger = logger
         self.null = self.ensure_species(CopasiSpecies("null"))
+        self.plots=[]
     
     def ensure_species(self, species=None, **kwargs):
         """
@@ -187,6 +189,26 @@ class CopasiModel:
             if func.lower()=="sqrt":
                 self.create_SQRT_reactions(X, Y)
 
+    def add_plot(self, name, species_names):
+        """
+        Creates a plot that shows the transient concentration of the given species over time.
+        This method is not thread safe as it compares the length of this model's species list before
+        and after the operation and assumes that they do not change through other threads.
+        """
+        num_species_before = len(self.species_list)
+        
+        Plot = collections.namedtuple("Plot", ["name","species_list"])
+        species_list = [self.ensure_species(name=species_name) for species_name in species_names]
+        plot = Plot(name, species_list)
+        self.plots.append(plot)
+        
+        num_species_after = len(self.species_list)
+        if self.logger is not None:
+            if num_species_before != num_species_after:
+                logger.warn(f"Requested to plot a species unknown to model \"{self.name}\"; possible typo")
+            logger.info("Created plot \"{}\" that shows {}".format(plot.name, ",".join(map(lambda n: f"[{n}]|Time", species_names))))
+        
+
     def dump(self, destination, template_path="template.cps.jinja"):
         """
         Creates an xml file from this model that can be read and executed with Copasi
@@ -213,7 +235,10 @@ def yaml2model(yaml_str, logger=None):
     
     for function_description in data["functions"]:
         model.create_reactions_from(function_description)
-        
+    
+    for plot_description in data["plots"]:
+        model.add_plot(plot_description["name"], plot_description["species"])
+    
     return model
 
 def setup_logger(args):
