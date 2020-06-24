@@ -104,11 +104,13 @@
       </Task>
    </ListOfTasks>
    <ListOfPlots>
-      <PlotSpecification name="plot_1" type="Plot2D" active="1" taskTypes="">
+      {% for plot in model.plots %}
+      <PlotSpecification name="{{ plot.name }}" type="Plot2D" active="1" taskTypes="">
          <Parameter name="log X" type="bool" value="0" />
          <Parameter name="log Y" type="bool" value="0" />
          <ListOfPlotItems>
-            <PlotItem name="[X1]|Time" type="Curve2D">
+            {% for species in plot.species_list %}
+            <PlotItem name="[{{ species.name }}]|Time" type="Curve2D">
                <Parameter name="Line type" type="unsignedInteger" value="0" />
                <Parameter name="Line subtype" type="unsignedInteger" value="0" />
                <Parameter name="Line width" type="unsignedFloat" value="1" />
@@ -117,35 +119,13 @@
                <Parameter name="Recording Activity" type="string" value="during" />
                <ListOfChannels>
                   <ChannelSpec cn="CN=Root,Model={{ model.name }},Reference=Time" />
-                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Vector=Compartments[compartment],Vector=Metabolites[X1],Reference=Concentration" />
+                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Vector=Compartments[compartment],Vector=Metabolites[{{ species.name }}],Reference=Concentration" />
                </ListOfChannels>
             </PlotItem>
-            <PlotItem name="[X2]|Time" type="Curve2D">
-               <Parameter name="Line type" type="unsignedInteger" value="0" />
-               <Parameter name="Line subtype" type="unsignedInteger" value="0" />
-               <Parameter name="Line width" type="unsignedFloat" value="1" />
-               <Parameter name="Symbol subtype" type="unsignedInteger" value="0" />
-               <Parameter name="Color" type="string" value="auto" />
-               <Parameter name="Recording Activity" type="string" value="during" />
-               <ListOfChannels>
-                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Reference=Time" />
-                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Vector=Compartments[compartment],Vector=Metabolites[X2],Reference=Concentration" />
-               </ListOfChannels>
-            </PlotItem>
-            <PlotItem name="[Y]|Time" type="Curve2D">
-               <Parameter name="Line type" type="unsignedInteger" value="0" />
-               <Parameter name="Line subtype" type="unsignedInteger" value="0" />
-               <Parameter name="Line width" type="unsignedFloat" value="1" />
-               <Parameter name="Symbol subtype" type="unsignedInteger" value="0" />
-               <Parameter name="Color" type="string" value="auto" />
-               <Parameter name="Recording Activity" type="string" value="during" />
-               <ListOfChannels>
-                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Reference=Time" />
-                  <ChannelSpec cn="CN=Root,Model={{ model.name }},Vector=Compartments[compartment],Vector=Metabolites[Y],Reference=Concentration" />
-               </ListOfChannels>
-            </PlotItem>
+            {% endfor %}
          </ListOfPlotItems>
       </PlotSpecification>
+      {% endfor %}
    </ListOfPlots>
    <GUI />
    <ListOfUnitDefinitions>
