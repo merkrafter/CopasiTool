@@ -186,6 +186,8 @@ class CopasiModel:
         except ValueError: # too many values to unpack
             # this has to be a sqrt
             Yname, _, func, Xname = line.split(" ")
+            Y = self.ensure_species(name=Yname)
+            X = self.ensure_species(name=Xname)
             if func.lower()=="sqrt":
                 self.create_SQRT_reactions(X, Y)
 
