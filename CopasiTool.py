@@ -55,12 +55,12 @@ class CopasiModel:
         try:
             idx = list(map(lambda s: s.name, self.species_list)).index(species.name)
             if self.logger is not None:
-                logger.debug(f"Found species {species.name} in model {self.name}; nothing to do")
+                logger.debug(f"Found species {species.name} in model \"{self.name}\"; nothing to do")
             return self.species_list[idx]
         except ValueError:
             self.species_list.append(species)
             if self.logger is not None:
-                logger.info(f"Created species {species.name} = {species.initial_concentration}")
+                logger.debug(f"Created species {species.name} = {species.initial_concentration}")
             return species
         
         
@@ -85,7 +85,7 @@ class CopasiModel:
         self.reactions += [R1, R2, R3]
         
         if self.logger is not None:
-            logger.info(f"Created functional reactions for {Y.name} = ADD {X1.name} {X2.name}")
+            logger.debug(f"Created functional reactions for {Y.name} = ADD {X1.name} {X2.name}")
 
     def create_SUB_reactions(self, X1, X2, Y):
         """
@@ -108,7 +108,7 @@ class CopasiModel:
         self.reactions += [R1, R2, R3, R4]
         
         if self.logger is not None:
-            logger.info(f"Created functional reactions for {Y.name} = SUB {X1.name} {X2.name}")
+            logger.debug(f"Created functional reactions for {Y.name} = SUB {X1.name} {X2.name}")
 
     def create_MUL_reactions(self, X1, X2, Y):
         """
@@ -126,7 +126,7 @@ class CopasiModel:
         self.reactions += [R1, R2]
         
         if self.logger is not None:
-            logger.info(f"Created functional reactions for {Y.name} = MUL {X1.name} {X2.name}")
+            logger.debug(f"Created functional reactions for {Y.name} = MUL {X1.name} {X2.name}")
         
     def create_DIV_reactions(self, X2, X1, Y):
         """
@@ -144,7 +144,7 @@ class CopasiModel:
         self.reactions += [R1, R2]
         
         if self.logger is not None:
-            logger.info(f"Created functional reactions for {Y.name} = DIV {X2.name} {X1.name}")
+            logger.debug(f"Created functional reactions for {Y.name} = DIV {X2.name} {X1.name}")
 
     def create_SQRT_reactions(self, X, Y):
         """
@@ -162,7 +162,7 @@ class CopasiModel:
         self.reactions += [R1, R2]
         
         if self.logger is not None:
-            logger.info(f"Created functional reactions for {Y.name} = SQRT {X.name}")
+            logger.debug(f"Created functional reactions for {Y.name} = SQRT {X.name}")
 
     def create_reactions_from(self, line):
         """
@@ -208,7 +208,7 @@ class CopasiModel:
         if self.logger is not None:
             if num_species_before != num_species_after:
                 logger.warn(f"Requested to plot a species unknown to model \"{self.name}\"; possible typo")
-            logger.info("Created plot \"{}\" that shows {}".format(plot.name, ",".join(map(lambda n: f"[{n}]|Time", species_names))))
+            logger.debug("Created plot \"{}\" that shows {}".format(plot.name, ",".join(map(lambda n: f"[{n}]|Time", species_names))))
         
 
     def dump(self, destination, template_path="template.cps.jinja"):
@@ -271,6 +271,9 @@ if __name__ == "__main__":
     with open(args.input) as f:
         data = f.read()
     model = yaml2model(data, logger)
+
+    logger.info(f"Model has {len(model.species_list)} species")
+    logger.info(f"Model has {len(model.reactions)} reactions")
     
     logger.info(f"Writing to {args.output}")
     model.dump(args.output)
