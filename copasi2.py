@@ -1,4 +1,6 @@
+from collections import defaultdict
 from yaml import safe_load
+import logging
 import re
 
 def _unary_op(result_name, func_name, arg_name):
@@ -37,10 +39,14 @@ def yaml2py_function(data):
     params = ", ".join([f"{s['name']}={s['initial_value']}" for s in data["input"]])
     declaration = f"def {FUNC_NAME}({params}):\n"
 
+    counts = defaultdict(int)
     code = ""
     ws = re.compile(r"\s+")
     for function in data["functions"]:
         result_name, _, function_name, *args = ws.split(function)
+        if counts[result_name] > 0:
+            logging.warning(f"'{result_name}' is written to multiple times which will produce faulty output in COPASI.")
+        counts[result_name] += 1
         code += "  {}\n".format(func2string(result_name, function_name, args))
 
     return_statement = "  return locals()"
