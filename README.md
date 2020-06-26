@@ -16,7 +16,21 @@ The format that CopasiTool expects the formula to be in is SSA form operations.
 In short, any variable may only be written to once.
 CopasiTool converts this SSA form in a YAML file to a COPASI-compatible .cps file.
 If this sounds confusing, you may want to start with a simple [example](examples/average.yaml).
-The general format is as follows:
+```bash
+# create a Python script to test the defined model
+$ python CopasiTool.py example/average.py --to-python
+$ python average.py # this is the default outfile name pattern
+  TWO : 2
+  a :   6
+  avg : 3
+  b :   0
+  sum : 6
+# everything alright; let's create the COPASI file
+$ python CopasiTool.py example/average.py --to-copasi
+  # creates average.cps that can be opened with COPASI
+```
+
+The file format for YAML file associated with CopasiTool is as follows:
 
 ```yaml
 name: Name of the project
