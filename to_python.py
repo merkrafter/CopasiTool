@@ -78,6 +78,13 @@ if __name__ == "__main__":
 """
 
 
+def to_python(yaml_data):
+    pyimports = "from math import sqrt\nimport logging\n"
+    pyfunc = yaml2py_function(yaml_data)
+    pymain = get_py_main()
+    return "\n".join([pyimports, pyfunc, pymain])
+
+
 if __name__ == "__main__":
     import argparse
 
@@ -87,15 +94,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    pyimports = ""
-    pyimports += "from math import sqrt\n"
-    pyimports += "import logging\n"
-
     with open(args.input, "r") as f:
-        pyfunc = yaml2py_function(safe_load(f))
+        data = safe_load(f)
 
-    pymain = get_py_main()
-    pycode = "\n".join([pyimports, pyfunc, pymain])
+    pycode = to_python(data)
 
     with open(args.output, "w") as f:
         f.write(pycode)

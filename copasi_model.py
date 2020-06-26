@@ -1,7 +1,6 @@
 import collections
 
 from jinja2 import Environment, FileSystemLoader
-from yaml import safe_load
 
 N_a = 6.0221408570000002e+23
 
@@ -233,11 +232,10 @@ class CopasiModel:
             f.write(self.dump_s(template_path).encode("utf-8"))
 
 
-def yaml2model(yaml_str, logger=None):
+def yaml2model(data, logger=None):
     """
     Reads the given YAML string and returns a CopasiModel from it.
     """
-    data = safe_load(yaml_str)
 
     name = data["name"]
     if logger is not None:

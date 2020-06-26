@@ -1,5 +1,7 @@
 from copasi_model import yaml2model
 from util import setup_logger
+from to_python import to_python
+from yaml import safe_load
 
 if __name__ == "__main__":
     import argparse
@@ -7,6 +9,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help="YAML configuration file")
     parser.add_argument("--output", "-o", help="Copasi-readable XML file", default="result.cps")
+    parser.add_argument("--to-python", "-p", help="create Python executable for dynamic analysis", action="store_true")
     parser.add_argument("--verbose", "-v", action="count", default=0, help="Amount of debugging information")
 
     args = parser.parse_args()
@@ -14,11 +17,17 @@ if __name__ == "__main__":
 
     logger.info(f"Reading from {args.input}")
     with open(args.input) as f:
-        data = f.read()
-    model = yaml2model(data, logger)
+        data = safe_load(f.read())
 
-    logger.info(f"Model has {len(model.species_list)} species")
-    logger.info(f"Model has {len(model.reactions)} reactions")
+    if args.to_python:
+        output = to_python(data)
+    else:
+        model = yaml2model(data, logger)
+
+        logger.info(f"Model has {len(model.species_list)} species")
+        logger.info(f"Model has {len(model.reactions)} reactions")
+        output = model.dump_s()
 
     logger.info(f"Writing to {args.output}")
-    model.dump(args.output)
+    with open(args.output, "wb") as f:
+        f.write(output.encode("utf-8"))
