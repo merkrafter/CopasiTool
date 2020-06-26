@@ -58,11 +58,11 @@ def get_py_main():
 f"""
 if __name__ == "__main__":
   variables = {FUNC_NAME}()
-  negative_vars = [variable for variable, value in variables.items() if value < 0]
-  if negative_vars:
-    logging.warning("Some variables seem to produce negative values which is problematic in COPASI.")
   for variable in sorted(variables.keys()):
-    print(variable, ":\\t", variables[variable])
+    value = variables[variable]
+    print(variable, ":\\t", value)
+    if value < 0:
+      logging.warning(f"Variable '{{variable}}' seems to produce a negative value which is problematic in COPASI.")
 """
 
 if __name__ == "__main__":
