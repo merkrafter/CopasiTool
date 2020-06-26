@@ -9,14 +9,22 @@ N_a = 6.0221408570000002e+23
 
 class CopasiSpecies:
     __counter = 0
-    def __init__(self, name, initial_concentration=0):
+    def __init__(self, name, initial_value=0):
         self.id=CopasiSpecies.__counter
         CopasiSpecies.__counter += 1
         self.name=name
         self.compartment=0
         self.noise="false"
         self.simulation_type="reactions"
-        self.initial_concentration=initial_concentration/1000.0*N_a
+        self.initial_value = initial_value
+
+    @property
+    def initial_concentration(self):
+        """
+        The initial concentation is the equivalent to the initial value,
+        expressed in molar concentration that COPASI can understand.
+        """
+        return self.initial_value/1000.0*N_a
 
 
 class CopasiReaction:
@@ -60,7 +68,7 @@ class CopasiModel:
         except ValueError:
             self.species_list.append(species)
             if self.logger is not None:
-                logger.debug(f"Created species {species.name} = {species.initial_concentration}")
+                logger.debug(f"Created species {species.name} = {species.initial_value}")
             return species
         
         

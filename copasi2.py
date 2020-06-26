@@ -34,7 +34,7 @@ def yaml2py_function(data):
     Generates a python function from a data dict that was created from a
     COPASI yaml declaration.
     """
-    params = ", ".join([f"{s['name']}={s['initial_concentration']}" for s in data["input"]])
+    params = ", ".join([f"{s['name']}={s['initial_value']}" for s in data["input"]])
     declaration = f"def {FUNC_NAME}({params}):\n"
 
     code = ""

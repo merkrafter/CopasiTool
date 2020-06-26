@@ -4,11 +4,11 @@
 name: Average
 input:
   - name: a
-    initial_concentration: 6
+    initial_value: 6
   - name: b
-    initial_concentration: 0 # from ground
+    initial_value: 0 # from ground
   - name: TWO
-    initial_concentration: 2
+    initial_value: 2
 
 functions:
   - sum = ADD a b

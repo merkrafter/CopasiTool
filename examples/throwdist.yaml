@@ -5,21 +5,21 @@
 name: Throw distance approximation
 input:
   - name: alpha
-    initial_concentration: 0.785 # pi/4
+    initial_value: 0.785 # pi/4
   - name: h0
-    initial_concentration: 0 # from ground
+    initial_value: 0 # from ground
   - name: v
-    initial_concentration: 5
+    initial_value: 5
     
   # constants
   - name: g
-    initial_concentration: 9.81
+    initial_value: 9.81
   - name: ONE
-    initial_concentration: 1
+    initial_value: 1
   - name: TWO
-    initial_concentration: 2
+    initial_value: 2
   - name: SIX
-    initial_concentration: 6
+    initial_value: 6
 
 functions:
   # Taylor approximation of cosine
