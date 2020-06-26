@@ -220,15 +220,17 @@ class CopasiModel:
             self.logger.debug("Created plot \"{}\" that shows {}".format(plot.name, ",".join(
                 map(lambda n: f"[{n}]|Time", species_names))))
 
+    def dump_s(self, template_path="template.cps.jinja"):
+        env = Environment(loader=FileSystemLoader(searchpath="./"), autoescape=True)
+        template = env.get_template(template_path)
+        return template.render(model=self, species_list=self.species_list, reactions=self.reactions)
+
     def dump(self, destination, template_path="template.cps.jinja"):
         """
         Creates an xml file from this model that can be read and executed with Copasi
         """
         with open(destination, "wb") as f:  # binary mode for utf-8 encoding
-            env = Environment(loader=FileSystemLoader(searchpath="./"), autoescape=True)
-            template = env.get_template(template_path)
-            f.write(
-                template.render(model=self, species_list=self.species_list, reactions=self.reactions).encode("utf-8"))
+            f.write(self.dump_s(template_path).encode("utf-8"))
 
 
 def yaml2model(yaml_str, logger=None):
