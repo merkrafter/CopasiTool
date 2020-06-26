@@ -3,6 +3,7 @@ from yaml import safe_load
 import logging
 import re
 
+
 def _unary_op(result_name, func_name, arg_name):
     """
     Generates a function call to func_name with argument arg_name
@@ -10,14 +11,16 @@ def _unary_op(result_name, func_name, arg_name):
     """
     return f"{result_name} = {func_name}({arg_name})"
 
+
 def _binary_op(result_name, func_name, arg1_name, arg2_name):
     """
     Generates a binary operator indicated by func_name in infix notation
     with arguments arg1_name and arg2_name storing the result in result_name.
     Supported func_names are add, sub, mul, and div.
     """
-    funcs = {'add':'+', 'sub':'-', 'mul':'*', 'div':'/'}
+    funcs = {'add': '+', 'sub': '-', 'mul': '*', 'div': '/'}
     return f"{result_name} = {arg1_name} {funcs[func_name]} {arg2_name}"
+
 
 def func2string(result_name, op_name, args):
     """
@@ -29,7 +32,9 @@ def func2string(result_name, op_name, args):
     elif n_args == 2:
         return _binary_op(result_name, op_name.lower(), args[0], args[1])
 
+
 FUNC_NAME = "copasi_model"
+
 
 def yaml2py_function(data):
     """
@@ -53,6 +58,7 @@ def yaml2py_function(data):
 
     return declaration + code + return_statement
 
+
 def get_py_main():
     """
     Generates a main part of python code that calls the generated (from yaml)
@@ -61,7 +67,7 @@ def get_py_main():
     this causes unpredictable behaviour in COPASI.
     """
     return \
-f"""
+        f"""
 if __name__ == "__main__":
   variables = {FUNC_NAME}()
   for variable in sorted(variables.keys()):
@@ -71,8 +77,10 @@ if __name__ == "__main__":
       logging.warning(f"Variable '{{variable}}' seems to produce a negative value which is problematic in COPASI.")
 """
 
+
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help="YAML configuration file")
     parser.add_argument("output", help="Python executable that emulates the COPASI functions")

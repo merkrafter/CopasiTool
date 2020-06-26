@@ -1,21 +1,22 @@
 import collections
 import logging
 
-from jinja2 import Template, Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader
 from yaml import safe_load
-
 
 N_a = 6.0221408570000002e+23
 
+
 class CopasiSpecies:
     __counter = 0
+
     def __init__(self, name, initial_value=0):
-        self.id=CopasiSpecies.__counter
+        self.id = CopasiSpecies.__counter
         CopasiSpecies.__counter += 1
-        self.name=name
-        self.compartment=0
-        self.noise="false"
-        self.simulation_type="reactions"
+        self.name = name
+        self.compartment = 0
+        self.noise = "false"
+        self.simulation_type = "reactions"
         self.initial_value = initial_value
 
     @property
@@ -24,18 +25,20 @@ class CopasiSpecies:
         The initial concentation is the equivalent to the initial value,
         expressed in molar concentration that COPASI can understand.
         """
-        return self.initial_value/1000.0*N_a
+        return self.initial_value / 1000.0 * N_a
 
 
 class CopasiReaction:
     __counter = 0
+
     def __init__(self, name, substrates, products, k=0.1):
-        self.id=CopasiReaction.__counter
+        self.id = CopasiReaction.__counter
         CopasiReaction.__counter += 1
-        self.name=name
-        self.substrates=substrates
-        self.products=products
-        self.k=k
+        self.name = name
+        self.substrates = substrates
+        self.products = products
+        self.k = k
+
 
 class CopasiModel:
 
@@ -49,8 +52,8 @@ class CopasiModel:
         # It serves as a "bin", that is, other species that should decay in reality are converted to null in COPASI
         self.logger = logger
         self.null = self.ensure_species(CopasiSpecies("null"))
-        self.plots=[]
-    
+        self.plots = []
+
     def ensure_species(self, species=None, **kwargs):
         """
         Ensures a certain species is known to this model.
@@ -70,9 +73,7 @@ class CopasiModel:
             if self.logger is not None:
                 logger.debug(f"Created species {species.name} = {species.initial_value}")
             return species
-        
-        
-    
+
     def add_reaction(self, reaction):
         self.reactions.append(reaction)
 
@@ -86,12 +87,12 @@ class CopasiModel:
         """
         name_prefix = f"{self.num_functional_reactions}_Add_"
         self.num_functional_reactions += 1
-        
-        R1 = CopasiReaction(name_prefix+"X1toY", substrates=[(1,X1)], products=[(1,X1),(1,Y)])
-        R2 = CopasiReaction(name_prefix+"X2toY", substrates=[(1,X2)], products=[(1,X2),(1,Y)])
-        R3 = CopasiReaction(name_prefix+"Ydecay", substrates=[(1,Y)], products=[(1,self.null)])
+
+        R1 = CopasiReaction(name_prefix + "X1toY", substrates=[(1, X1)], products=[(1, X1), (1, Y)])
+        R2 = CopasiReaction(name_prefix + "X2toY", substrates=[(1, X2)], products=[(1, X2), (1, Y)])
+        R3 = CopasiReaction(name_prefix + "Ydecay", substrates=[(1, Y)], products=[(1, self.null)])
         self.reactions += [R1, R2, R3]
-        
+
         if self.logger is not None:
             logger.debug(f"Created functional reactions for {Y.name} = ADD {X1.name} {X2.name}")
 
@@ -105,16 +106,16 @@ class CopasiModel:
         """
         name_prefix = f"{self.num_functional_reactions}_Sub_"
         self.num_functional_reactions += 1
-        
-        Z = CopasiSpecies(name_prefix+"Z")
+
+        Z = CopasiSpecies(name_prefix + "Z")
         self.ensure_species(Z)
-        
-        R1 = CopasiReaction(name_prefix+"X1toY", substrates=[(1,X1)], products=[(1,X1), (1,Y)])
-        R2 = CopasiReaction(name_prefix+"X2toZ", substrates=[(1,X2)], products=[(1,X2), (1,Z)])
-        R3 = CopasiReaction(name_prefix+"YandZdecay", substrates=[(1,Y), (1,Z)], products=[(1,self.null)])
-        R4 = CopasiReaction(name_prefix+"Ydecay", substrates=[(1, Y)], products=[(1,self.null)])
+
+        R1 = CopasiReaction(name_prefix + "X1toY", substrates=[(1, X1)], products=[(1, X1), (1, Y)])
+        R2 = CopasiReaction(name_prefix + "X2toZ", substrates=[(1, X2)], products=[(1, X2), (1, Z)])
+        R3 = CopasiReaction(name_prefix + "YandZdecay", substrates=[(1, Y), (1, Z)], products=[(1, self.null)])
+        R4 = CopasiReaction(name_prefix + "Ydecay", substrates=[(1, Y)], products=[(1, self.null)])
         self.reactions += [R1, R2, R3, R4]
-        
+
         if self.logger is not None:
             logger.debug(f"Created functional reactions for {Y.name} = SUB {X1.name} {X2.name}")
 
@@ -128,14 +129,15 @@ class CopasiModel:
         """
         name_prefix = f"{self.num_functional_reactions}_Mul_"
         self.num_functional_reactions += 1
-        
-        R1 = CopasiReaction(name_prefix+"X1andX2toY", substrates=[(1,X1),(1,X2)], products=[(1,X1),(1,X2),(1,Y)])
-        R2 = CopasiReaction(name_prefix+"Ydecay", substrates=[(1,Y)], products=[(1,self.null)])
+
+        R1 = CopasiReaction(name_prefix + "X1andX2toY", substrates=[(1, X1), (1, X2)],
+                            products=[(1, X1), (1, X2), (1, Y)])
+        R2 = CopasiReaction(name_prefix + "Ydecay", substrates=[(1, Y)], products=[(1, self.null)])
         self.reactions += [R1, R2]
-        
+
         if self.logger is not None:
             logger.debug(f"Created functional reactions for {Y.name} = MUL {X1.name} {X2.name}")
-        
+
     def create_DIV_reactions(self, X2, X1, Y):
         """
         Creates reactions that represent the function: Y = X2 / X1 (note the order of arguments)
@@ -146,11 +148,11 @@ class CopasiModel:
         """
         name_prefix = f"{self.num_functional_reactions}_Div_"
         self.num_functional_reactions += 1
-        
-        R1 = CopasiReaction(name_prefix+"X1andYtoX1", substrates=[(1,X1),(1,Y)], products=[(1,X1)])
-        R2 = CopasiReaction(name_prefix+"X2toX2andY", substrates=[(1,X2)], products=[(1,X2),(1,Y)])
+
+        R1 = CopasiReaction(name_prefix + "X1andYtoX1", substrates=[(1, X1), (1, Y)], products=[(1, X1)])
+        R2 = CopasiReaction(name_prefix + "X2toX2andY", substrates=[(1, X2)], products=[(1, X2), (1, Y)])
         self.reactions += [R1, R2]
-        
+
         if self.logger is not None:
             logger.debug(f"Created functional reactions for {Y.name} = DIV {X2.name} {X1.name}")
 
@@ -164,11 +166,11 @@ class CopasiModel:
         """
         name_prefix = f"{self.num_functional_reactions}_Sqrt_"
         self.num_functional_reactions += 1
-        
-        R1 = CopasiReaction(name_prefix+"XtoXandY", substrates=[(1,X)], products=[(1,X),(1,Y)], k=0.2)
-        R2 = CopasiReaction(name_prefix+"2Ydecay", substrates=[(2,Y)], products=[(1,self.null)])
+
+        R1 = CopasiReaction(name_prefix + "XtoXandY", substrates=[(1, X)], products=[(1, X), (1, Y)], k=0.2)
+        R2 = CopasiReaction(name_prefix + "2Ydecay", substrates=[(2, Y)], products=[(1, self.null)])
         self.reactions += [R1, R2]
-        
+
         if self.logger is not None:
             logger.debug(f"Created functional reactions for {Y.name} = SQRT {X.name}")
 
@@ -181,22 +183,22 @@ class CopasiModel:
             Y = self.ensure_species(name=Yname)
             X1 = self.ensure_species(name=X1name)
             X2 = self.ensure_species(name=X2name)
-            
+
             func = func.lower()
-            if func=="add":
+            if func == "add":
                 self.create_ADD_reactions(X1, X2, Y)
-            elif func=="sub":
+            elif func == "sub":
                 self.create_SUB_reactions(X1, X2, Y)
-            elif func=="mul":
+            elif func == "mul":
                 self.create_MUL_reactions(X1, X2, Y)
-            elif func=="div":
+            elif func == "div":
                 self.create_DIV_reactions(X1, X2, Y)
-        except ValueError: # too many values to unpack
+        except ValueError:  # too many values to unpack
             # this has to be a sqrt
             Yname, _, func, Xname = line.split(" ")
             Y = self.ensure_species(name=Yname)
             X = self.ensure_species(name=Xname)
-            if func.lower()=="sqrt":
+            if func.lower() == "sqrt":
                 self.create_SQRT_reactions(X, Y)
 
     def add_plot(self, name, species_names):
@@ -206,18 +208,18 @@ class CopasiModel:
         and after the operation and assumes that they do not change through other threads.
         """
         num_species_before = len(self.species_list)
-        
-        Plot = collections.namedtuple("Plot", ["name","species_list"])
+
+        Plot = collections.namedtuple("Plot", ["name", "species_list"])
         species_list = [self.ensure_species(name=species_name) for species_name in species_names]
         plot = Plot(name, species_list)
         self.plots.append(plot)
-        
+
         num_species_after = len(self.species_list)
         if self.logger is not None:
             if num_species_before != num_species_after:
-                logger.warn(f"Requested to plot a species unknown to model \"{self.name}\"; possible typo")
-            logger.debug("Created plot \"{}\" that shows {}".format(plot.name, ",".join(map(lambda n: f"[{n}]|Time", species_names))))
-        
+                logger.warning(f"Requested to plot a species unknown to model \"{self.name}\"; possible typo")
+            logger.debug("Created plot \"{}\" that shows {}".format(plot.name, ",".join(
+                map(lambda n: f"[{n}]|Time", species_names))))
 
     def dump(self, destination, template_path="template.cps.jinja"):
         """
@@ -226,7 +228,8 @@ class CopasiModel:
         with open(destination, "wb") as f:  # binary mode for utf-8 encoding
             env = Environment(loader=FileSystemLoader(searchpath="./"), autoescape=True)
             template = env.get_template(template_path)
-            f.write(template.render(model=self, species_list=self.species_list, reactions=self.reactions).encode("utf-8"))
+            f.write(
+                template.render(model=self, species_list=self.species_list, reactions=self.reactions).encode("utf-8"))
 
 
 def yaml2model(yaml_str, logger=None):
@@ -234,22 +237,23 @@ def yaml2model(yaml_str, logger=None):
     Reads the given YAML string and returns a CopasiModel from it.
     """
     data = safe_load(yaml_str)
-    
+
     name = data["name"]
     if logger is not None:
         logger.info(f"Creating CopasiModel \"{name}\"")
     model = CopasiModel(name, logger=logger)
-    
+
     for species_description in data["input"]:
         species = model.ensure_species(**species_description)
-    
+
     for function_description in data["functions"]:
         model.create_reactions_from(function_description)
-    
+
     for plot_description in data["plots"]:
         model.add_plot(plot_description["name"], plot_description["species"])
-    
+
     return model
+
 
 def setup_logger(args):
     logger = logging.getLogger(__name__)
@@ -265,16 +269,18 @@ def setup_logger(args):
         logger.setLevel(logging.WARNING)
     return logger
 
+
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help="YAML configuration file")
     parser.add_argument("--output", "-o", help="Copasi-readable XML file", default="result.cps")
     parser.add_argument("--verbose", "-v", action="count", default=0, help="Amount of debugging information")
-    
+
     args = parser.parse_args()
     logger = setup_logger(args)
-    
+
     logger.info(f"Reading from {args.input}")
     with open(args.input) as f:
         data = f.read()
@@ -282,6 +288,6 @@ if __name__ == "__main__":
 
     logger.info(f"Model has {len(model.species_list)} species")
     logger.info(f"Model has {len(model.reactions)} reactions")
-    
+
     logger.info(f"Writing to {args.output}")
     model.dump(args.output)
