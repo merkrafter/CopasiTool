@@ -9,13 +9,13 @@ In order to run these scripts you need Python3 installed and also install the de
 ```bash
 pip install -r requirements.txt
 ```
-In addition (if not already happened) you probably want to install COPASI from their (project page)[https://github.com/copasi/COPASI].
+In addition (if not already happened) you probably want to install COPASI from their [project page](https://github.com/copasi/COPASI).
 
 # How to use
 The format that CopasiTool expects the formula to be in is SSA form operations.
 In short, any variable may only be written to once.
 CopasiTool converts this SSA form in a YAML file to a COPASI-compatible .cps file.
-If this sounds confusing, you may want to start with a simple (example)[examples/average.yaml].
+If this sounds confusing, you may want to start with a simple [example](examples/average.yaml).
 The general format is as follows:
 
 ```yaml
