@@ -2,6 +2,7 @@ from copasi_model import yaml2model
 from util import setup_logger
 from to_python import to_python
 from yaml import safe_load
+import os
 
 if __name__ == "__main__":
     import argparse
@@ -9,7 +10,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help="YAML configuration file")
     parser.add_argument("--output", "-o", help="file to write to")
-    group = parser.add_mutually_exclusive_group()
+    group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--to-python", "-p", help="create Python executable for dynamic analysis", action="store_true")
     group.add_argument("--to-copasi", "-s", help="create COPASI-readable file", action="store_true")
     parser.add_argument("--verbose", "-v", action="count", default=0, help="Amount of debugging information")
@@ -23,13 +24,16 @@ if __name__ == "__main__":
 
     if args.to_python:
         output = to_python(data)
-    elif args.to_copasi:
+        default_outfile = os.path.splitext(os.path.basename(args.input))[0] + ".py"
+    else:  # elif args.to_copasi:
         model = yaml2model(data, logger)
-
         logger.info(f"Model has {len(model.species_list)} species")
         logger.info(f"Model has {len(model.reactions)} reactions")
         output = model.dump_s()
+        default_outfile = os.path.splitext(os.path.basename(args.input))[0] + ".cps"
 
-    logger.info(f"Writing to {args.output}")
-    with open(args.output, "wb") as f:
+    outfile = args.output if args.output is not None else default_outfile
+
+    logger.info(f"Writing to {outfile}")
+    with open(outfile, "wb") as f:
         f.write(output.encode("utf-8"))
