@@ -219,9 +219,9 @@ class CopasiModel:
             self.logger.debug("Created plot \"{}\" that shows {}".format(plot.name, ",".join(
                 map(lambda n: f"[{n}]|Time", species_names))))
 
-    def dump_s(self, template_path="template.cps.jinja"):
-        env = Environment(loader=FileSystemLoader(searchpath="./"), autoescape=True)
-        template = env.get_template(template_path)
+    def dump_s(self, template_path="./", template_name="template.cps.jinja"):
+        env = Environment(loader=FileSystemLoader(searchpath=template_path), autoescape=True)
+        template = env.get_template(template_name)
         return template.render(model=self, species_list=self.species_list, reactions=self.reactions)
 
     def dump(self, destination, template_path="template.cps.jinja"):

@@ -29,7 +29,8 @@ if __name__ == "__main__":
         model = yaml2model(data, logger)
         logger.info(f"Model has {len(model.species_list)} species")
         logger.info(f"Model has {len(model.reactions)} reactions")
-        output = model.dump_s()
+        template_path = os.path.dirname(__file__)
+        output = model.dump_s(template_path=template_path)
         default_outfile = os.path.splitext(os.path.basename(args.input))[0] + ".cps"
 
     outfile = args.output if args.output is not None else default_outfile
