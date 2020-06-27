@@ -1,3 +1,4 @@
 Jinja2==2.11.2
 MarkupSafe==1.1.1
+python-copasi==4.28.226
 PyYAML==5.3.1
