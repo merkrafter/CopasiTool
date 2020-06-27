@@ -20,14 +20,14 @@ from util import setup_logger
 dataModel = CRootContainer.addDatamodel()
 
 
-def main(args, logger):
+def simulate_and_store_results(args, logger):
 
   try:
-      if not dataModel.loadModel(args.infile):
-          logger.critical("Couldn't load {0}:".format(args.infile))
+      if not dataModel.loadModel(args.input):
+          logger.critical("Couldn't load {0}:".format(args.input))
           logger.critical(CCopasiMessage.getAllMessageText())
   except:
-      logger.critical("Error while importing the model from file named \"" + args.infile + "\".\n")
+      logger.critical("Error while importing the model from file named \"" + args.input + "\".\n")
       return 1
 
   model = dataModel.getModel()
@@ -43,7 +43,7 @@ def main(args, logger):
 
   report = create_report(model)
   trajectoryTask.getReport().setReportDefinition(report)
-  trajectoryTask.getReport().setTarget(args.outfile)
+  trajectoryTask.getReport().setTarget(args.output)
   # don't append output if the file exists, but overwrite the file
   trajectoryTask.getReport().setAppend(False)
 
@@ -123,12 +123,12 @@ def create_report(model):
 if __name__ == '__main__':
    import argparse
    parser = argparse.ArgumentParser()
-   parser.add_argument("infile", help=".cps file defining a model")
+   parser.add_argument("input", help=".cps file defining a model")
    parser.add_argument("--duration", "-d", type=int, help="Number of seconds to run this simulation", default=200)
    parser.add_argument("--steps", "-s", type=int, help="Number of steps to run this simulation", default=100)
-   parser.add_argument("--outfile", "-o", help="Resulting csv file", default="result.csv")
+   parser.add_argument("--output", "-o", help="Resulting csv file", default="result.csv")
    parser.add_argument("--verbose", "-v", action="count", default=0, help="Amount of debugging information")
 
    args = parser.parse_args()
    logger = setup_logger(args)
-   main(args, logger)
+   simulate_and_store_results(args, logger)
