@@ -34,6 +34,7 @@ The file format for YAML file associated with CopasiTool is as follows:
 
 ```yaml
 name: Name of the project
+duration: 100  # seconds to run this model; mandatory
 input:  # List of species (roughly equivalent to constant values in programming languages)
  - name: a  # Name of the species; mandatory
    initial_concentration: 4  # initial value; defaults to 0

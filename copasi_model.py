@@ -51,6 +51,7 @@ class CopasiModel:
         self.logger = logger
         self.null = self.ensure_species(CopasiSpecies("null"))
         self.plots = []
+        self.duration = 200
 
     def ensure_species(self, species=None, **kwargs):
         """
@@ -241,6 +242,8 @@ def yaml2model(data, logger=None):
     if logger is not None:
         logger.info(f"Creating CopasiModel \"{name}\"")
     model = CopasiModel(name, logger=logger)
+
+    model.duration = data["duration"]
 
     for species_description in data["input"]:
         species = model.ensure_species(**species_description)

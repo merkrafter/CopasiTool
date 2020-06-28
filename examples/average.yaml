@@ -2,6 +2,7 @@
 # to analogously compute the average of two non-negative,
 # real numbers.
 name: Average
+duration: 100
 input:
   - name: a
     initial_value: 6

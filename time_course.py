@@ -56,7 +56,8 @@ def simulate_and_store_results(args, logger):
   else:
       problem.setAutomaticStepSize(True)
   dataModel.getModel().setInitialTime(0.0)
-  problem.setDuration(args.duration)
+  if args.duration is not None:
+      problem.setDuration(args.duration)
   # tell the problem to actually generate time series data
   problem.setTimeSeriesRequested(True)
   problem.setOutputEvent(False)
@@ -124,7 +125,7 @@ if __name__ == '__main__':
    import argparse
    parser = argparse.ArgumentParser()
    parser.add_argument("input", help=".cps file defining a model")
-   parser.add_argument("--duration", "-d", type=int, help="Number of seconds to run this simulation", default=200)
+   parser.add_argument("--duration", "-d", type=int, help="Number of seconds to run this simulation")
    parser.add_argument("--steps", "-s", type=int, help="Number of steps to run this simulation", default=100)
    parser.add_argument("--output", "-o", help="Resulting csv file", default="result.csv")
    parser.add_argument("--verbose", "-v", action="count", default=0, help="Amount of debugging information")

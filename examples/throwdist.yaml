@@ -3,6 +3,7 @@
 # reaches when thrown, given the launch angle alpha,
 # the initial height h0, and the initial speed v.
 name: Throw distance approximation
+duration: 200
 input:
   - name: alpha
     initial_value: 0.785 # pi/4

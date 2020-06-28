@@ -15,7 +15,7 @@ if __name__ == "__main__":
     group.add_argument("--to-python", "-p", help="create Python executable for dynamic analysis", action="store_true")
     group.add_argument("--to-copasi", "-c", help="create COPASI-readable file", action="store_true")
     group.add_argument("--simulate", "-t", help="run COPASI time course and create resulting csv file", action="store_true")
-    parser.add_argument("--duration", "-d", type=int, help="Number of seconds to run this simulation", default=200)
+    parser.add_argument("--duration", "-d", type=int, help="Number of seconds to run this simulation")
     parser.add_argument("--steps", "-s", type=int, help="Number of steps to run this simulation", default=100)
     parser.add_argument("--verbose", "-v", action="count", default=0, help="Amount of debugging information")
 
