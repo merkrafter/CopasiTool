@@ -18,7 +18,7 @@ CopasiTool converts this SSA form in a YAML file to a COPASI-compatible .cps fil
 If this sounds confusing, you may want to start with a simple [example](examples/average.yaml).
 ```bash
 # create a Python script to test the defined model
-$ python CopasiTool.py example/average.py --to-python
+$ python CopasiTool.py examples/average.yaml --to-python
 $ python average.py # this is the default outfile name pattern
   TWO : 2
   a :   6
@@ -26,8 +26,15 @@ $ python average.py # this is the default outfile name pattern
   b :   0
   sum : 6
 # everything alright; let's create the COPASI file
-$ python CopasiTool.py example/average.py --to-copasi
-  # creates average.cps that can be opened with COPASI
+$ python CopasiTool.py examples/average.yaml --to-copasi
+  # creates average.cps that can be simulated with COPASI
+$ python CopasiTool.py --simulate average.cps
+  # creates result.csv that contains the values for all species for each time step
+$ head result.csv -n2; tail result.csv -n2
+time,null,a,b,TWO,sum,avg
+0,0,6,0,2,0,0
+98.9899,53.3942,6,0,2,5.9997,2.9997
+100,54.0003,6,0,2,5.99973,2.99973
 ```
 
 The file format for YAML file associated with CopasiTool is as follows:
