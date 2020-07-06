@@ -251,7 +251,8 @@ def yaml2model(data, logger=None):
     for function_description in data["functions"]:
         model.create_reactions_from(function_description)
 
-    for plot_description in data["plots"]:
-        model.add_plot(plot_description["name"], plot_description["species"])
+    if "plots" in data:
+        for plot_description in data["plots"]:
+            model.add_plot(plot_description["name"], plot_description["species"])
 
     return model
