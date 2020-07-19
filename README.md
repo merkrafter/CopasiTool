@@ -1,5 +1,6 @@
 # General description
 CopasiTool provides scripts that help bootstrap and verify COPASI models.
+**There is no active development anymore, but I hope it will be helpful even in its current state**
 It was developed during another project that involved working with COPASI when it became apparent that finding errors in the reactions and/or species configuration or making adaptions in a later stage would be highly prone to errors if one was only using the COPASI GUI.
 
 Specifically, CopasiTool supports fulfilling the following task: **Given a mathematical formula that consists of the four basic arithmetic operations and square roots** (note that this allows Taylor approximation of general functions)**, create a biochemical network description that can be read by and simulated with COPASI.**
@@ -60,4 +61,4 @@ plots:  # List of plots that show species concentrations plotted against time
 # License
 This project is licensed under the [MIT license](LICENSE).
 From it, the "no warranty" part is especially important, as this project does not guarantee any correctness whatsoever.
-It was created as a quick-and-dirty solution to a problem during an own project, not as a library or sophisticated program, and it will most likely be archived as soon as the aforementioned project is over.
+It was created as a quick-and-dirty solution to a problem during an own project, not as a library or sophisticated program.
